@@ -2,7 +2,7 @@ Hello and welcome to this blog. For now it is work in progress and you can read 
 
 [link to my personal site](https://luigisaetta.it)
 
-and from my articles on Medium
+and from my articles on [Medium] (https://luigi-saetta.medium.com/)
 
 
 ## Luigi Saetta Personal Blog
