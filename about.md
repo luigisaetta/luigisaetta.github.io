@@ -1,4 +1,8 @@
 # About
 
-This is where you put the contents of your *About* page. Like all your pages, it's in [Markdown](https://guides.github.com/features/mastering-markdown/) format.
+This is my Personal Blog site.
+I have created it inspirated by the reading of the Book from Fats.ai and by following their Deep Learning course.
+
+I'll start blogging about my technological interests. Especially about Deep Learning and AI, but also on IoT and other memerging technologies.
+
 
