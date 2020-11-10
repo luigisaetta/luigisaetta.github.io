@@ -2,6 +2,6 @@ Hello and welcome to this blog. Edit the `index.md` file to change this content.
 
 ![Image of fast.ai logo](images/logo.png)
 
-## This is a title
+## Luigi Saetta Personal Blog
 
-And you can include links, like this [link to fast.ai](https://www.fast.ai). Posts will appear after this file. 
+And you can include links, like this [link to my personal site](https://luigisaetta.it). Posts will appear after this file. 
