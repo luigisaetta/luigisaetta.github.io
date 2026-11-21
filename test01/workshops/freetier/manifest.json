@@ -1,0 +1,33 @@
+{
+  "workshoptitle": "Build a Support Bundle Triage Agent with OCI Sandboxes",
+  "tutorials": [
+    {
+      "title": "Introduction",
+      "filename": "../../introduction/introduction.md"
+    },
+    {
+      "title": "Lab 0: Setup and Preflight",
+      "filename": "../../setup/setup.md"
+    },
+    {
+      "title": "Lab 1: Build Sandbox Tools",
+      "filename": "../../sandbox-tools/sandbox-tools.md"
+    },
+    {
+      "title": "Lab 2: Build the Agent Loop",
+      "filename": "../../agent-loop/agent-loop.md"
+    },
+    {
+      "title": "Lab 3: Report and End-to-End Investigation",
+      "filename": "../../triage-report/triage-report.md"
+    },
+    {
+      "title": "Clean Up Workshop Resources",
+      "filename": "../../cleanup/cleanup.md"
+    },
+    {
+      "title": "Need Help?",
+      "filename": "../../need-help/need-help.md"
+    }
+  ]
+}
