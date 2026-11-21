@@ -4,7 +4,7 @@
 
 Account for every sandbox, snapshot and project used by the workshop. Sandbox expiration stops execution but does not guarantee that the resource has been deleted.
 
-Estimated Time: 10 minutes
+Estimated Time: 5 minutes
 
 ### Objectives
 
@@ -16,6 +16,18 @@ Estimated Time: 10 minutes
 
 * Access to the OCI Console and the resource IDs recorded during the workshop.
 * Knowledge of which resources you created and which were pre-existing.
+
+Keep a small private resource record while working:
+
+| Resource | Where it came from | Cleanup responsibility |
+| --- | --- | --- |
+| Preflight sandbox | Full Lab 0 preflight | Automatic attempt; resolve any warning |
+| New CLI sandbox | Lab 3 without `--sandbox-id` | Automatic attempt unless `--keep` |
+| Attached sandbox | Lab 3 with `--sandbox-id` | Preserved by the CLI; owner cleans up |
+| Snapshot | Optional `--snapshot` | Explicit removal when no longer needed |
+| Project | Created or reused in Lab 0 | Delete only a dedicated workshop project |
+
+The 5-minute estimate covers the cleanup actions; service state transitions may take longer. Cleanup is complete only after deletion is confirmed.
 
 ## Task 1: Resolve sandbox cleanup
 

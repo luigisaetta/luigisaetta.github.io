@@ -4,7 +4,7 @@
 
 Implement `triage/tools.py` over the provided `SandboxSession`. The four tools expose small pieces of evidence to the model while keeping real bundle commands inside OCI. This lab uses controlled local fakes, with no model or OCI calls.
 
-Estimated Time: 30 minutes
+Estimated Time: 5 minutes
 
 ### Objectives
 
@@ -49,6 +49,10 @@ Read AGENTS.md and labs/lab1.md. Read prompts/lab1.md and follow the instruction
 
 Expected result: the implementation follows the prompt's interfaces and uses the supplied session for all production bundle operations. The fake client is a test harness, not a substitute for isolation when handling untrusted bundles.
 
+The path checks constrain the file-oriented tools. `run_python` executes model-generated code inside the sandbox; these checks do not make it a separate filesystem jail. The OCI Sandbox is the execution boundary, and `/workspace` is its writable workspace. ZIP ingestion separately rejects unsafe archive entries before extraction.
+
+For portability, review shell commands for GNU-only options such as `grep -P` or `find -printf`: the controlled fakes run the same commands on the participant's machine.
+
 ## Task 3: Validate the module
 
 1. Run the infrastructure and Lab 1 tests, formatting check and linter.
@@ -62,6 +66,8 @@ python -m pylint triage
 2. Review `git diff` and confirm that the provided files and existing tests were preserved. Fix implementation failures before continuing.
 
 Expected result after implementation: all selected tests and checks pass. Coverage includes timeouts, shell metacharacters, binary files, symlink escapes and bounded results. These outcomes must be established in your working checkout; they are not assumed.
+
+**Done when:** the cumulative tests pass, provided files are unchanged, and you can explain the difference between a bounded tool result and sandbox isolation. Continue to [Lab 2](../workshops/freetier/index.html?lab=agent-loop).
 
 ## Acknowledgements
 

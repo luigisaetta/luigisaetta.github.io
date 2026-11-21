@@ -2,9 +2,9 @@
 
 ## Introduction
 
-Prepare an isolated Python environment, configure an OCI Generative AI project and verify the model and sandbox. Commands below come from the source setup guides and provided preflight implementation. Live service commands remain unverified in this edition. **Review finding:** installing the source requirements during this review failed because the configured package index did not provide `openai==3.55.1`. Resolve that exact dependency with the source maintainer before attempting the executable labs; no substitute version has been validated. The review host also defaulted to Python 3.9, below the required 3.11, so use the supported interpreter specified below.
+Prepare an isolated Python environment, configure an OCI Generative AI project and verify the model and sandbox. Follow this setup once; on a prepared machine, verify or reuse the existing environment and correctly configured project. The 5-minute estimate uses the author-reported test on November 21, 2026; first-time provisioning, downloads and cloud waits can extend it. Commands are grounded in the reviewed source; this review did not rerun cloud provisioning.
 
-Estimated Time: 20 minutes
+Estimated Time: 5 minutes
 
 ### Objectives
 
@@ -20,7 +20,7 @@ Estimated Time: 20 minutes
 
 ## Task 1: Get the reviewed source
 
-1. Clone into a new working directory; use a fresh clone for this workshop so existing work is preserved.
+1. For a new exercise, clone into a new working directory and select the reviewed revision. If you already have a prepared checkout, confirm its revision and preserve your work; skip the clone and checkout commands rather than changing a working exercise.
 ```bash
 <copy>
 git clone https://github.com/luigisaetta/support-bundle-triage-agent.git
@@ -30,7 +30,7 @@ git checkout --detach 228ad6756adcc41395ac76e86f0a2de48735dbf8
 ```
 2. Read `AGENTS.md` and `labs/lab0.md`. Keep the provided modules, tests and reference solutions unchanged. Ask Codex to work only on the current lab modules.
 
-Expected result: a checkout matching the reviewed starting state, with four build modules absent. The detached checkout is suitable for local exercises; preserve your work before changing revisions.
+Expected result: a checkout at `228ad6756adcc41395ac76e86f0a2de48735dbf8`, with four modules to build in a fresh clone. This fixed revision keeps the prompts and tests consistent. The detached checkout is suitable for local exercises; preserve your work before changing revisions. The source README says implementations are included, but those four files are absent at this revision; the lab tests and prompts define what you build.
 
 ## Task 2: Create the environment
 
@@ -40,6 +40,7 @@ Expected result: a checkout matching the reviewed starting state, with four buil
 python3.12 --version
 python3.12 -m venv .venv
 source .venv/bin/activate
+python -c "import sys; print(sys.executable)"
 python -m pip install -r requirements.txt -r requirements-dev.txt
 oci --version
 </copy>
@@ -48,9 +49,11 @@ oci --version
 
 Expected result: Python resolves inside `.venv`; package installation completes and the separately installed OCI CLI is available. Application pins are `oci==2.192.0`, `openai==3.55.1` and `python-dotenv==1.2.4`. If a pin is unavailable, resolve that with the source maintainer before proceeding.
 
+To resume in a new terminal, enter the existing source checkout and run `source .venv/bin/activate`; do not recreate the environment. If you prefer Conda, use the alternative environment steps in the source README, then return at Task 3. Use one environment throughout the labs.
+
 ## Task 3: Create the OCI project
 
-1. Inspect the three JSON files under `config/`. They request 720-hour response/conversation retention, short-term compaction using `openai.gpt-oss-120b`, and enabled sandboxes with `MANAGED` networking and `DENY_ALL` outbound policy. Long-term memory is not enabled.
+1. If you already have a workshop project, verify its settings and reuse it; skip the create command when they match. Otherwise, inspect the three JSON files under `config/`. They request 720-hour response/conversation retention, short-term compaction using `openai.gpt-oss-120b`, and enabled sandboxes with `MANAGED` networking and `DENY_ALL` outbound policy. Long-term memory is not enabled.
 2. Confirm the compaction model is available in your chosen region. Select the matching OCI CLI profile and region in your terminal using your own credential setup; these must match the settings used by the SDK below.
 3. Replace `YOUR_COMPARTMENT_OCID` and run the source project's create command. This creates a cloud resource.
 ```bash
@@ -102,7 +105,9 @@ python -m triage.preflight
 ```
 3. Allow several minutes for startup and stopping. Follow every failure hint before continuing. If cleanup reports a sandbox still stopping, record its ID and delete it in the Console after it reaches `STOPPED`.
 
-Expected result: all checks pass, with any cleanup warning resolved through the cleanup lab. These are participant acceptance criteria, not results observed during workshop authoring.
+Expected result: all required checks pass. A slow cleanup warning does not block the offline build labs: record the sandbox ID and finish deletion in the cleanup lab. A failing environment, configuration, model or isolation check must be fixed before the corresponding live step.
+
+**Done when:** you can identify the active interpreter, the selected provider and project, explain why `DENY_ALL` is used, and account for the preflight sandbox. Continue to [Lab 1](../workshops/freetier/index.html?lab=sandbox-tools).
 
 ## Acknowledgements
 

@@ -4,7 +4,7 @@
 
 Implement `triage/agent.py` to connect the tool registry to Responses function calling. The next model request sends the new tool results and the previous response ID. Tests use a fake model and fake sandbox.
 
-Estimated Time: 35 minutes
+Estimated Time: 5 minutes
 
 ### Objectives
 
@@ -42,6 +42,18 @@ Read AGENTS.md and labs/lab2.md. Read prompts/lab2.md and follow the instruction
 
 Expected result: the module can end with `answered` or `max_steps`, handles multiple function calls in a response and tolerates missing usage data. The provided `ModelClientFactory` selects the configured provider; do not hard-code an endpoint or model in your loop.
 
+Trace one tool round trip while reviewing the generated code:
+
+```text
+Model response r1: function_call(name="grep", call_id="c1", arguments=...)
+Application: tools.call("grep", arguments) -> bounded text or ERROR: ...
+Next request: previous_response_id="r1", store=True,
+              input=[function_call_output(call_id="c1", output=...)]
+Model response r2: more function calls, or the answer
+```
+
+Instructions and schemas are supplied on every investigation request; the accumulated history is held by the provider. Several function calls can occur within one step, so the step limit is not a tool-call limit. If the model keeps requesting tools, the default budget permits 15 such turns followed by a forced answer request: up to 16 model calls for the investigation, excluding preflight and report generation. An answer at the budget boundary requires no extra forced turn.
+
 ## Task 3: Run cumulative checks
 
 1. Run the growing acceptance suite and code checks.
@@ -55,6 +67,8 @@ python -m pylint triage
 2. Explain why a wrong-path tool result returns to the model as an error message, and why every function call needs an output. Review `git diff` before continuing.
 
 Expected result after implementation: the fake-model tests pass without cloud calls. The optional live-model exercise in the source Lab 2 guide runs commands through a local fake; omit it when using untrusted data. The real sandbox investigation is in Lab 3.
+
+**Done when:** cumulative tests pass and you can trace `response_id` and `call_id` through a multi-tool response. Continue to [Lab 3](../workshops/freetier/index.html?lab=triage-report).
 
 ## Acknowledgements
 

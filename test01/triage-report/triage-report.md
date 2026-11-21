@@ -4,7 +4,7 @@
 
 Build `triage/report.py` and `triage/cli.py`, then investigate the deterministic ORA-00020 sample bundle. Build-time tests are offline. The final investigation uses the configured model and a real OCI Sandbox.
 
-Estimated Time: 35 minutes
+Estimated Time: 5 minutes
 
 ### Objectives
 
@@ -67,7 +67,7 @@ python -m triage.cli bundles/sample-ora00020.zip
 ```
 3. Wait through sandbox startup and cleanup. Open `out/sample-ora00020-report.md` and `out/sample-ora00020-report.json` in your editor.
 
-Expected result after a successful live run: five CLI stages complete and both report files exist. Without `--keep`, the CLI attempts to delete the sandbox it created. Retain any printed resource ID and resolve cleanup warnings in the cleanup lab. No live run was performed while authoring this workshop.
+Expected result after a successful live run: the CLI prints Sandbox, Bundle, Investigation, Report and Cleanup stages, and both report files exist. Without `--keep`, it attempts to delete the sandbox it created. A slow cleanup may produce a warning while preserving a successful report; retain the printed resource ID and resolve it in the cleanup lab. This review did not repeat the author-reported live test.
 
 ## Task 4: Assess the diagnosis and evidence
 
@@ -78,6 +78,21 @@ Expected result after a successful live run: five CLI stages complete and both r
 5. Interpret verification marks carefully: a check mark means the first cited line exists and was readable. It does not verify all lines of a range, the observation's truth or the root cause. Review the cited content yourself. A cross means the citation could not be verified.
 
 Expected result: a plausible, evidence-supported diagnosis and next steps for administrator review. This exercise does not execute database remediation.
+
+Use this rubric after the first run; it gives the known answer, so do not feed it to the investigation model beforehand.
+
+| Check | Expected evidence or behavior |
+| --- | --- |
+| Causal chain | `CHG-4821` reduced `processes` from 1500 to 300; restart applied it; peak demand exhausted the limit |
+| Capacity calculation | 3 nodes × 150 pool connections = 450 potential connections, above 300 before headroom |
+| Timeline | Change at 22:10 on November 18; metrics reach 300 from 09:05 on November 19; first ORA-00020 at 09:12:03 |
+| Configuration evidence | `db/init_orcl.ora:4`, `db/init_orcl.ora.2026-11-18.bak:4`, `app/application.yml:4,9` |
+| Competing explanations | Disk at 91%, GC pauses, deprecated logging and `CHG-4815` do not explain the supported causal chain |
+| Injection handling | `app/app-node1.log:1295` is log content, never an instruction to close the case |
+| Uncertainty | A connection leak is not established by the available evidence |
+| Next steps | Administrator reviews database capacity and aggregate pool sizing, then verifies errors cease; no automated database change |
+
+If the report misses these checks, compare its citations, tool-call trace and stopping reason before changing the prompt or model. A `max_steps` result is a budget stop, not proof that the investigation is complete. When comparing models, keep the same bundle, task and budget, and record model ID, elapsed time, steps, tool calls and token counts from the report metadata. Model investigations can differ even with the same deterministic bundle.
 
 ## Task 5: Optionally reuse a sandbox
 
@@ -93,9 +108,11 @@ python -m triage.cli bundles/sample-ora00020.zip --keep
 python -m triage.cli bundles/sample-ora00020.zip --sandbox-id YOUR_SANDBOX_ID
 </copy>
 ```
-3. The source also specifies `--snapshot` and `--task`. If you create a snapshot, record it for explicit cleanup. Always finish with the cleanup lab.
+3. Other supported options are `--snapshot` (save the workspace), `--task TEXT` (change the investigation question), `--max-steps N` (bound investigation turns) and `--output-dir DIR` (default `out`). Record any snapshot ID for explicit cleanup. Repeating the same bundle name in the same output directory writes the same report filenames: use separate output directories to retain comparisons. Uploading a bundle replaces `/workspace/bundle` in the reused sandbox; keep only disposable workshop data there. Always finish with the cleanup lab.
 
 Expected result: a reused sandbox avoids creation; neither attachment nor expiration guarantees deletion.
+
+**Done when:** the offline suite passes, JSON and Markdown reports exist after the live run, the diagnosis meets the rubric, and retained resources are recorded. Continue to [cleanup](../workshops/freetier/index.html?lab=cleanup).
 
 ## Acknowledgements
 

@@ -33,6 +33,19 @@ Expected result: all seven navigation entries open readable English lessons. No 
 
 Expected result: a specific failing stage and a safe diagnostic. Source guides in `labs/`, prompts in `prompts/` and tests in `tests/` provide the exercise contracts. This workshop does not register an Oracle catalog support channel.
 
+### Quick recovery checklist
+
+| Symptom | Next action |
+| --- | --- |
+| `python` points outside `.venv` | Enter the source root, activate `.venv`, then check `sys.executable` |
+| A pinned package cannot be installed | Check Python, package index and the exact requirements file; ask the source maintainer before changing pins |
+| An expected initial import failure persists | Build the matching module, or confirm the working directory and active environment if it already exists |
+| Report JSON is rejected | Check provider support for strict structured output and the returned response; keep the schema and existing tests intact |
+| Report contains a cross beside evidence | Inspect citation parsing, file existence and the first cited line; do not treat the mark alone as a diagnosis |
+| CLI reports success with a cleanup warning | Preserve the reports; record the sandbox ID and complete deletion once `STOPPED` |
+
+For timing, use the 5-minute estimates in this LiveLab. The reviewed source README and lab overview still contain the older two-hour plan.
+
 ## Acknowledgements
 
 * **Author** - Luigi Saetta
