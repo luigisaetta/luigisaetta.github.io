@@ -6,7 +6,7 @@ Build a support bundle triage agent with Codex. The agent investigates synthetic
 
 The production path is: CLI → safe ZIP inspection and sandbox upload → agent loop → function tools → OCI Sandbox → structured report and citation checks. The model uses the Responses API through OCI Generative AI or OpenAI. OCI is required for sandboxes with either model provider.
 
-This workshop follows source revision `228ad6756adcc41395ac76e86f0a2de48735dbf8`. That revision contains infrastructure, prompts and tests; `triage/tools.py`, `triage/agent.py`, `triage/report.py` and `triage/cli.py` are intentionally absent. The README's statement that implementations are included does not match that revision. Do the labs in sequence.
+The workshop published contains infrastructure, prompts and tests; `triage/tools.py`, `triage/agent.py`, `triage/report.py` and `triage/cli.py` are intentionally absent. The README's statement that implementations are included does not match that revision. Do the labs in sequence.
 
 Allow about 2 hours for setup and the three build labs, plus introduction, cleanup and cloud startup waits. This workshop has been reviewed against the source; live OCI provisioning, model calls and the completed agent run have not been executed for this edition.
 
