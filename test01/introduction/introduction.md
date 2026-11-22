@@ -2,23 +2,31 @@
 
 ## About this Workshop
 
-Diagnosing a support incident often means piecing together application logs, database alerts, configuration files and metrics. In this workshop, you will use **Codex** to build an AI agent that investigates a **support bundle**, an archive containing these diagnostic files, and produces a triage report with a root cause, cited evidence, a timeline, confidence and next steps.
+Diagnosing a support incident often means piecing together application logs, database alerts, configuration files and metrics.
 
-You will give the model tools to explore files, run Python analysis and correlate evidence across multiple sources. You will use the **OpenAI Responses API** to manage the investigation across multiple steps and turn its findings into a structured report with verifiable citations.
+In this workshop, you will use **OpenAI Codex** to build an **AI agent** that investigates a **support bundle**, an archive containing these diagnostic files, and produces a **triage report** with a root cause, cited evidence, a timeline, confidence and next steps.
+
+You will give the model tools to explore files, run Python analysis and correlate evidence across multiple sources.
+
+You will use the **OpenAI Responses API** to manage the investigation across multiple steps and turn its findings into a structured report with verifiable citations.
 
 By the end you will have four Python modules in your source checkout and a working command:
 
 ```bash
 <copy>
-python -m triage.cli bundles/sample-ora00020.zip --keep
+python -m triage.cli bundles/sample-ora00020.zip
 </copy>
 ```
 
-The command writes `out/sample-ora00020-report.md` and `out/sample-ora00020-report.json`. Success means that the acceptance tests pass, the report explains the incident using verified `file:line` citations, and you have reviewed the findings and cleaned up your sandbox. A citation check proves that the first cited line exists; it does not prove that the model's conclusion is correct.
+The command writes a complete report: `out/sample-ora00020-report.md`.
 
-You build the agent with Codex in three stages after setup: small sandbox tools, a Responses API investigation loop, then structured reporting and a command line interface. Configuration loading, OCI clients, sandbox lifecycle, safe ZIP ingestion and the sample bundle generator are provided. The model plans the investigation, selects tools, writes Python analysis code and reasons over the results. The local client orchestrates the investigation and writes the reports.
+You build the agent with **Codex** in three stages after setup: small sandbox tools, a Responses API investigation loop, then structured reporting and a command line interface. Configuration loading, OCI clients, sandbox lifecycle, safe ZIP ingestion and the sample bundle generator are provided.
 
-Customer diagnostic files are untrusted input, and the agent can generate code to analyze them. To protect your machine and contain that execution, all bundle analysis runs inside an isolated **OCI Sandbox with outbound network access disabled**. The model runs through **OCI Generative AI** or **OpenAI**; OCI provides the sandbox in either case.
+The LLM plans the investigation, selects tools, writes Python analysis code and reasons over the results. The local client orchestrates the investigation and writes the reports.
+
+Customer diagnostic files are **untrusted input**, and the agent **can generate** code to analyze them. To protect your machine and contain that execution, all bundle analysis runs inside an isolated **OCI Sandbox with outbound network access disabled**.
+
+The model runs through **OCI Generative AI** or **OpenAI**; OCI provides the sandbox in either case.
 
 Estimated Time: 40 - 60 minutes
 
