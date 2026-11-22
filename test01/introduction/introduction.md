@@ -20,7 +20,7 @@ You build the agent with Codex in three stages after setup: small sandbox tools,
 
 Customer diagnostic files are untrusted input, and the agent can generate code to analyze them. To protect your machine and contain that execution, all bundle analysis runs inside an isolated **OCI Sandbox with outbound network access disabled**. The model runs through **OCI Generative AI** or **OpenAI**; OCI provides the sandbox in either case.
 
-Estimated Time: 5 minutes
+Estimated Time: 40 - 60 minutes
 
 ### Objectives
 
