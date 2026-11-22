@@ -1,16 +1,42 @@
 # Build a Support Bundle Triage Agent
 
-## About this Workshop
+## About This Workshop
 
-Diagnosing a support incident often means piecing together application logs, database alerts, configuration files and metrics.
+Diagnosing a support incident often requires connecting evidence from application logs, database alerts, configuration files, and metrics.
 
-In this workshop, you will use **OpenAI Codex** to build an **AI agent** that investigates a **support bundle**, an archive containing these diagnostic files, and produces a **triage report** with a root cause, cited evidence, a timeline, confidence and next steps.
+In this workshop, you will use **OpenAI Codex** to build an **AI agent** that investigates a **support bundle**: an archive of diagnostic files collected during an incident. The agent will produce a structured **triage report** that includes:
 
-You will give the model tools to explore files, run Python analysis and correlate evidence across multiple sources.
+- The likely root cause
+- Supporting evidence with verifiable citations
+- A timeline of relevant events
+- A confidence assessment
+- Recommended next steps
 
-You will use the **OpenAI Responses API** to manage the investigation across multiple steps and turn its findings into a structured report with verifiable citations.
+### What You Will Learn
 
-By the end you will have four Python modules in your source checkout and a working command:
+You will learn how to give a model tools to explore files, run Python analysis, and correlate evidence across multiple sources. You will also use the **OpenAI Responses API** to manage a multi-step investigation and turn its findings into a structured report.
+
+### How the Agent Works
+
+The model plans the investigation, selects tools, writes Python code to analyze diagnostic data, and reasons over the results. The local client orchestrates these steps and writes the final report.
+
+The model runs through either **OCI Generative AI** or **OpenAI**. In both cases, **OCI Sandbox** provides the isolated execution environment.
+
+Customer diagnostic files are treated as untrusted input. Because the agent can generate and execute analysis code, all analysis runs inside the sandbox with outbound network access disabled. This isolation helps protect your machine and contain code execution.
+
+### What You Will Build
+
+After setup, you will build the agent in three stages:
+
+1. **Sandbox tools** — Implement small tools for exploring and analyzing diagnostic files.
+2. **Investigation loop** — Use the Responses API to coordinate tool calls and gather evidence across multiple steps.
+3. **Reporting and CLI** — Generate a structured triage report and expose the agent through a command-line interface.
+
+The workshop provides configuration loading, OCI clients, sandbox lifecycle management, safe ZIP ingestion, and a sample bundle generator, so you can focus on the agent's investigation workflow.
+
+### Expected Outcome
+
+By the end of the workshop, you will have implemented four Python modules in your source checkout and will be able to run:
 
 ```bash
 <copy>
@@ -18,17 +44,13 @@ python -m triage.cli bundles/sample-ora00020.zip
 </copy>
 ```
 
-The command writes a complete report: `out/sample-ora00020-report.md`.
+The command investigates the sample bundle and writes the completed report to:
 
-You build the agent with **Codex** in three stages after setup: small sandbox tools, a Responses API investigation loop, then structured reporting and a command line interface. Configuration loading, OCI clients, sandbox lifecycle, safe ZIP ingestion and the sample bundle generator are provided.
+```text
+out/sample-ora00020-report.md
+```
 
-The LLM plans the investigation, selects tools, writes Python analysis code and reasons over the results. The local client orchestrates the investigation and writes the reports.
-
-Customer diagnostic files are **untrusted input**, and the agent **can generate** code to analyze them. To protect your machine and contain that execution, all bundle analysis runs inside an isolated **OCI Sandbox with outbound network access disabled**.
-
-The model runs through **OCI Generative AI** or **OpenAI**; OCI provides the sandbox in either case.
-
-Estimated Time: 40 - 60 minutes
+Estimated Time: 40–60 minutes
 
 ### Objectives
 
