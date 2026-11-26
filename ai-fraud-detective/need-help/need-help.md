@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Recovery starts by finding which boundary failed: your local environment, access to a service, or the code you built. Use the smallest relevant check to isolate the problem before retrying an investigation.
+Recovery starts by identifying the failing component. Python and pytest check the code built with Codex; the supplied preflight checks use the OCI SDK to verify access to OCI Generative AI projects and OCI Sandboxes, and test the OpenAI Responses API through the selected provider. For optional Lab 4, check the separate OpenAI Decisions API configuration. Start with the smallest relevant check before retrying an investigation.
 
 Estimated Time: 5–10 minutes as needed.
 

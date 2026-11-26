@@ -2,7 +2,7 @@
 
 ## Introduction
 
-An investigator needs to ask focused questions of a large body of evidence. You will give the agent small tools for searching records and running analysis, with limits that keep each result useful and each operation inside its workspace.
+An investigator needs focused ways to search a large body of evidence. You will use Codex to build Python function tools for the OpenAI Responses API: they search records and run analysis in an OCI Sandbox, with limits on execution time and returned text. Local tests use a fake sandbox so you can check the tools before making cloud calls.
 
 Estimated Time: 5–7 minutes of hands-on work, plus reading and code review.
 

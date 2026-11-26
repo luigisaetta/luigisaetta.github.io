@@ -2,7 +2,7 @@
 
 ## Introduction
 
-An investigation explores an open question; decision support asks focused questions about what has already been found. In this optional lab you turn the completed report into indicators that help investigators consider their next action, using thresholds they choose themselves.
+Decision support asks focused questions about evidence already collected. In this optional lab, you will use Codex to build a Python module that sends the saved report to the OpenAI Decisions API and reads probabilities and a suggested action. The OpenAI Responses API performed the investigation in earlier labs; the Decisions API helps investigators assess its results using thresholds they choose themselves, without starting an OCI Sandbox.
 
 Estimated Time: 5–7 minutes of hands-on work, plus reading and review.
 

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A useful investigation leaves a trail that another person can check. You will turn the agent's work into a report tied to the original evidence, then review its conclusions and release the cloud resources used for analysis.
+A useful investigation leaves a trail another person can check. You will use Codex to complete the Python application: SHA-256 checks detect changes to the case archive, OCI Sandboxes execute the analysis, and the OpenAI Responses API turns the investigation conversation into a structured JSON report rendered as Markdown for review. You will inspect its citations and execution trace, then release the sandbox resources.
 
 Estimated Time: 5–7 minutes of hands-on work, plus code review, model execution and sandbox waits.
 

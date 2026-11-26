@@ -2,7 +2,7 @@
 
 ## Introduction
 
-An agent investigates by repeating a simple cycle: choose a tool, examine its result and decide what to do next. You will build that cycle so it remembers earlier evidence, learns from tool errors and stops within a defined budget.
+An agent investigates by choosing a tool, examining its result and deciding what to do next. You will use Codex to build this cycle in Python with the OpenAI Responses API, whose function calling and stored conversation connect each step to earlier evidence. OpenAI is the usual model provider, with OCI Generative AI as the alternative; the tools from Lab 1 execute analysis in OCI Sandboxes.
 
 Estimated Time: 5–7 minutes of hands-on work, plus reading and review.
 

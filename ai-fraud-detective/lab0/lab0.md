@@ -2,7 +2,7 @@
 
 ## Introduction
 
-An AI investigator needs a model to reason about evidence and a separate workspace to execute analysis. In this lab you connect those two services and check them before building the agent, so configuration problems surface before an investigation begins.
+An AI investigator needs both reasoning and a place to execute analysis. You will prepare Python with Conda or venv, use the OCI CLI and OCI SDK credentials to access an OCI Generative AI project and its OCI Sandboxes, and connect the OpenAI Responses API through OpenAI or the alternative OCI Generative AI provider. Preflight checks verify model tool calling and sandbox isolation before you build the agent with Codex.
 
 Estimated Time: 5–7 minutes of hands-on work, plus reading, account preparation and provisioning waits.
 
