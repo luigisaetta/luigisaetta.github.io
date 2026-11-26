@@ -14,11 +14,18 @@ You will explore five ideas and the technologies behind them:
 
 Your application will investigate the supplied case bundle and produce a forensic report in Markdown and JSON, plus a trace of its analysis. The report brings together findings, amounts at risk, supporting evidence, explained anomalies and next steps. You will know you have succeeded when you can follow its conclusions back to the records and explain which conclusions the evidence supports.
 
-### Why OCI Sandboxes?
+### Why a sandbox, if the data is intact?
 
-The agent writes and executes Python during the investigation, before anyone reviews that code. OCI Sandboxes keep those commands separate from your computer, its credentials and access to the ERP. The workshop also disables outbound network connections from sandbox code to prevent it from sending supplier bank details, employee records or other case data to an external destination. Your application still sends selected tool results to the model provider.
-
-Checking the archive's SHA-256 establishes that it matches the reference extraction; it does not make its contents trustworthy. Emails and invoice descriptions can contain instructions aimed at misleading the AI, known as prompt injection. OCI Sandboxes contain the code's execution, while the agent must treat those messages as evidence rather than orders. Investigators still review its conclusions.
+- **The code is untrusted.** The model writes and runs Python that nobody
+  reviewed. A bug or a wrong command must not run where there is access to
+  the ERP, to credentials or to other data, even when the bundle is clean.
+- **The data is sensitive.** Supplier and payroll bank details, employee
+  records: with outbound traffic denied, not even a model error can send
+  them anywhere.
+- **Integrity is not trust.** The hash proves that nobody changed the data
+  after the extraction, not who wrote it. Invoice descriptions and emails
+  come from suppliers, and the rows under investigation were entered by the
+  suspect. Some of that text tries to manipulate the AI.
 
 The case data, cloud connections and testing framework are provided. You build the investigation tools and the agent that uses them, then turn its work into a report you can review.
 
