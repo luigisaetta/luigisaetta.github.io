@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Use the failing check and its hint to isolate a problem before retrying a live investigation. Work from the participant repository root with the chosen Python environment active. Keep credentials and case reports private when asking for assistance.
+Recovery starts by finding which boundary failed: your local environment, access to a service, or the code you built. Use the smallest relevant check to isolate the problem before retrying an investigation.
 
 Estimated Time: 5–10 minutes as needed.
 
@@ -18,6 +18,8 @@ Estimated Time: 5–10 minutes as needed.
 * Access to your participant checkout and its `AGENTS.md`.
 
 ## Task 1: Diagnose setup or service access
+
+Work from the participant repository root with the chosen Python environment active. Keep credentials and case reports private when asking for assistance.
 
 | Symptom | Action |
 | --- | --- |
@@ -40,7 +42,7 @@ python -m fraud_detective.preflight --quick
 </copy>
 ```
 
-Only run full preflight when ready to create a real test sandbox. Review the [source administrator guide](https://github.com/luigisaetta/ai-fraud-detective/blob/f6ee1a8b896f0369dc235e4cec1e94012c4b54eb/docs/oci-policies.md) for identity, policies, regions and capacity.
+Only run full preflight when ready to create a real test sandbox. Review the [source administrator guide](https://github.com/luigisaetta/ai-fraud-detective/blob/main/docs/oci-policies.md) for identity, policies, regions and capacity.
 
 Expected result: the relevant preflight checks pass; failures have a specific next action.
 
@@ -48,7 +50,7 @@ Expected result: the relevant preflight checks pass; failures have a specific ne
 
 Run the current lab's documented acceptance command. A missing new module is expected before implementation, but an earlier lab's failure must be fixed before continuing. Ask Codex to inspect the relevant prompt, public interfaces, provided classes and existing acceptance tests. Fix your lab module; do not change or skip existing tests, modify provided infrastructure, or have Codex read `solutions/`.
 
-If you need to catch up, ask the instructor for assistance. The source documents a human-operated reference-solution path, but this authoring workflow has not read, imported or copied those solutions. This workshop keeps the coding path and its review steps; no solution-copy command is required.
+If you need to catch up, ask the instructor for assistance with the current lab.
 
 Expected result: the current and prerequisite lab tests pass, and you can explain the implementation. Keep formatting and lint checks from the lab as part of completion.
 
@@ -56,7 +58,7 @@ Expected result: the current and prerequisite lab tests pass, and you can explai
 
 A missing `.sha256` reference or changed archive must stop before sandbox creation. Restore the intended bundle and its trusted reference rather than bypassing integrity checks. Do not replace a trusted reference merely to make a modified archive pass.
 
-If the report has failed citation marks, inspect the cited file/line through the sandbox tools and review the trace. A successful existence check still requires human interpretation. Investigate unsupported conclusions instead of treating a schema-valid report as proof.
+If the report has failed citation marks, review the trace and use Lab 3's retained-sandbox workflow to inspect the cited file and line.
 
 List resources before deleting anything:
 

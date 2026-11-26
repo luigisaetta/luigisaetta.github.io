@@ -2,21 +2,21 @@
 
 ## Introduction
 
-Build `fraud_detective/agent.py` with Codex. Your loop sends a task and tool schemas to the Responses API, executes requested tools through the registry, returns their outputs and repeats until the model answers or reaches its budget. Required tests use a fake model and fake sandbox locally; they make no service calls.
+An agent investigates by repeating a simple cycle: choose a tool, examine its result and decide what to do next. You will build that cycle so it remembers earlier evidence, learns from tool errors and stops within a defined budget.
 
 Estimated Time: 5–7 minutes of hands-on work, plus reading and review.
 
 ### Objectives
 
-* Continue a stored conversation with `previous_response_id`.
-* Match multiple function results to their `call_id` values.
+* Continue an investigation without resending its full history.
+* Match tool results to the requests that produced them.
 * Enforce a step budget and treat tool failures as information.
 * Keep bundle text from overriding investigation instructions.
 
 ### Prerequisites
 
 * Lab 1 completed, active workshop environment and commands run from the repository root.
-* Read `AGENTS.md`, `prompts/lab2.md` and `tests/lab2/`. Preserve all provided files and existing tests; do not read `solutions/`.
+* Read `AGENTS.md`, `prompts/lab2.md` and `tests/lab2/`.
 
 ## Task 1: Check Lab 1 and see the new tests fail
 
@@ -46,7 +46,7 @@ Read prompts/lab2.md and do what it says (everything below the first line). Foll
 </copy>
 ```
 
-The prompt specifies `InvestigationAgent`, `AgentResult` and `ToolCall`. The model client comes from `ModelClientFactory`; provider changes belong in settings. The conversation is stored by OpenAI on the usual path, or in the OCI project on the alternative path.
+Codex builds `fraud_detective/agent.py`. Keep the prompt's interfaces: `InvestigationAgent`, `AgentResult` and `ToolCall`. Use the provided `ModelClientFactory` for the Responses API client.
 
 The request sequence is:
 
@@ -55,8 +55,6 @@ instructions + task + tool schemas -> function calls
 previous_response_id + tool outputs -> further calls
 previous_response_id + tool outputs -> answer
 ```
-
-The OCI project condenser applies to OCI conversations only. Passing `previous_response_id` does not itself enable compaction on OpenAI.
 
 ## Task 3: Review the loop and instructions
 
@@ -86,8 +84,6 @@ Expected result: all tests pass and formatting/lint checks report no problems. Y
 ## Task 5: Inspect the simulated investigation
 
 Review the scripted responses and assertions in `tests/lab2/test_agent.py`. Trace the first request, tool execution, continuation and budget-exhaustion cases. Confirm that fake clients record requests without contacting a service.
-
-The source guide also offers an optional real-model demonstration using a local fake sandbox. This workshop defers the first live investigation to Lab 3 so case data and generated analysis use the OCI execution boundary. No live call is needed to complete this lab.
 
 Expected result: you can account for every tool result sent back to the fake model. Continue to [Lab 3](../workshops/index.html?lab=lab3).
 

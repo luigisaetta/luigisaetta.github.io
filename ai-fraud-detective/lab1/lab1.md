@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Build `fraud_detective/tools.py` with Codex. The agent will explore a bundle through four small function tools rather than loading every record into model context. This lab runs locally against a fake sandbox with synthetic test fixtures and makes no OCI or model calls.
+An investigator needs to ask focused questions of a large body of evidence. You will give the agent small tools for searching records and running analysis, with limits that keep each result useful and each operation inside its workspace.
 
 Estimated Time: 5–7 minutes of hands-on work, plus reading and code review.
 
@@ -15,9 +15,11 @@ Estimated Time: 5–7 minutes of hands-on work, plus reading and code review.
 ### Prerequisites
 
 * Lab 0 completed; repository root open and the selected Python environment active.
-* Read `AGENTS.md`, `prompts/lab1.md` and the existing acceptance tests. Keep provided modules and tests unchanged; do not read `solutions/`.
+* Read `AGENTS.md`, `prompts/lab1.md` and the existing acceptance tests.
 
 ## Task 1: See the missing module
+
+You will build `fraud_detective/tools.py`. Start with its acceptance tests, which use synthetic fixtures and a local fake sandbox without OCI or model calls:
 
 ```bash
 <copy>
@@ -26,8 +28,6 @@ python -m pytest tests/lab1 -q
 ```
 
 On a fresh participant checkout this fails with `ModuleNotFoundError: fraud_detective.tools`. If the module already exists, review its current state rather than deleting your work.
-
-The provided `SandboxSession` has `run(command, timeout_seconds)`, `write_file(path, data)` and `read_file(path)`. `tests/unit/fakes.py` supplies the fake backend. Its local execution is for controlled test fixtures only; real bundle analysis must use OCI.
 
 ## Task 2: Ask Codex to build the tools
 
@@ -52,7 +52,7 @@ Evidence uses `path:line: text`. For CSV files, line 1 is the header and line n 
 
 ## Task 3: Review the generated implementation
 
-Open `fraud_detective/tools.py` and check:
+Open `fraud_detective/tools.py`. It should use the provided `SandboxSession` to run commands and move files; its `run()` method takes a timeout. The fake backend in `tests/unit/fakes.py` is for controlled fixtures only; real bundle analysis uses OCI. Check:
 
 * Each tool has its own class, a model-facing `schema()` and a short sandbox command in `run()`.
 * `ToolRegistry.call()` accepts the documented arguments and converts failures to a single short `ERROR: ...` result.
@@ -60,7 +60,7 @@ Open `fraud_detective/tools.py` and check:
 * `run_python` writes a script under `/workspace/scratch` and executes it through the session. Every command has a timeout.
 * Outputs have limits and report truncation; long results keep useful head and tail portions.
 
-Bundle content and model arguments are untrusted. Production analysis stays inside the sandbox; outbound isolation does not prevent the application from forwarding selected tool output to the model provider.
+Expected result: each tool returns a bounded answer or an actionable error through the provided sandbox interface.
 
 ## Task 4: Run the checks
 

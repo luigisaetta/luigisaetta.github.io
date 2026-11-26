@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Prepare your machine and OCI project, select a model provider and verify the shared environment. All application infrastructure in this lab is provided.
+An AI investigator needs a model to reason about evidence and a separate workspace to execute analysis. In this lab you connect those two services and check them before building the agent, so configuration problems surface before an investigation begins.
 
 Estimated Time: 5–7 minutes of hands-on work, plus reading, account preparation and provisioning waits.
 
@@ -15,7 +15,7 @@ Estimated Time: 5–7 minutes of hands-on work, plus reading, account preparatio
 ### Prerequisites
 
 * The accounts, tools, credentials, budget and permissions in the Introduction.
-* An administrator has reviewed the [IAM guide](https://github.com/luigisaetta/ai-fraud-detective/blob/f6ee1a8b896f0369dc235e4cec1e94012c4b54eb/docs/oci-policies.md). Both paths need project and sandbox access; the OCI model path additionally needs API-key model permissions. Allow capacity for the investigation and preflight sandboxes.
+* An administrator has reviewed the [IAM guide](https://github.com/luigisaetta/ai-fraud-detective/blob/main/docs/oci-policies.md). Both paths need project and sandbox access; the OCI model path additionally needs API-key model permissions. Allow capacity for the investigation and preflight sandboxes.
 
 ## Task 1: Get the source and activate Python
 
@@ -33,7 +33,7 @@ cd ai-fraud-detective
 </copy>
 ```
 
-This workshop was authored against source revision `f6ee1a8b896f0369dc235e4cec1e94012c4b54eb`. If your checkout differs, compare its guides and dependency versions before proceeding. Run every later command from this repository root, never from `labs/`.
+Run every later command from this repository root, never from `labs/`. The walkthrough uses Python 3.12; the package requires Python 3.11 or later.
 
 Choose one environment path.
 
@@ -70,7 +70,7 @@ source .venv/bin/activate
 </copy>
 ```
 
-If venv or ensurepip is unavailable, install your operating system's venv package for that Python version and retry. See the [source venv walkthrough](https://github.com/luigisaetta/ai-fraud-detective/blob/f6ee1a8b896f0369dc235e4cec1e94012c4b54eb/docs/setup-venv.md).
+If venv or ensurepip is unavailable, install your operating system's venv package for that Python version and retry. See the [source venv walkthrough](https://github.com/luigisaetta/ai-fraud-detective/blob/main/docs/setup-venv.md).
 
 Both paths rejoin here. Confirm the active interpreter and install the pinned application dependencies and development tools:
 
@@ -110,11 +110,22 @@ Alternatively create the project in the OCI Console with these same settings. If
 | Long-term memory | Not enabled |
 | Sandboxes | Enabled, `MANAGED` networking, `DENY_ALL` outbound policy |
 
-Save the returned project OCID. The network policy cannot be changed after creation; recreate an incorrectly configured project. Use a dedicated workshop project because cleanup considers every sandbox in it. These conversation settings govern the OCI model path; OpenAI stores its conversation separately. Keep the supplied project configuration for both paths because preflight checks it.
+Save the returned project OCID. The network policy cannot be changed after creation; recreate an incorrectly configured project. Use a dedicated workshop project because cleanup considers every sandbox in it. Keep the supplied project configuration for both provider paths because preflight checks it.
 
 Expected result: an active project with these settings and sufficient sandbox capacity.
 
 ## Task 3: Configure the provider and credentials
+
+Choose where the model runs. OCI supplies the execution workspace either way; the selected model provider stores the investigation conversation.
+
+| Layer | OpenAI, usual path | OCI Generative AI, alternative |
+| --- | --- | --- |
+| Investigation model | OpenAI | OCI Generative AI |
+| Stored conversation | OpenAI platform/account settings | OCI project settings from Task 2 |
+| Conversation compaction | Not explicitly configured by this application | OCI project short-term memory |
+| Analysis execution | OCI Sandbox | OCI Sandbox |
+
+Neither path enables long-term memory across investigations. Blocking sandbox outbound traffic contains the analysis code; your local application still sends selected tool output to the model provider and saves reports locally. Use the invented workshop data.
 
 Create a secrets file only if `.env` does not already exist:
 
@@ -133,12 +144,12 @@ Edit it privately. Never paste keys into chat or commit them. Environment variab
 
 The checked-in settings default to OCI: explicitly select OpenAI for the usual path. These model IDs are the source examples; your key must have access. Use a supported tool-calling Responses model if an example is unavailable, then verify it in Task 4.
 
-For OpenAI, obtain the key through your OpenAI platform account. For OCI, obtain a Generative AI API key in the authorized compartment and confirm the model and condenser are available in the region. The [source IAM guide](https://github.com/luigisaetta/ai-fraud-detective/blob/f6ee1a8b896f0369dc235e4cec1e94012c4b54eb/docs/oci-policies.md) distinguishes user SDK permissions from API-key model permissions.
+For OpenAI, obtain the key through your OpenAI platform account. For OCI, obtain a Generative AI API key in the authorized compartment and confirm the model and condenser are available in the region. The [source IAM guide](https://github.com/luigisaetta/ai-fraud-detective/blob/main/docs/oci-policies.md) distinguishes user SDK permissions from API-key model permissions.
 
 Both paths also require these settings:
 
 * `[oci]`: set `region`, `project_id`, `config_file`, `profile` and `auth` to your project and SDK credentials. Use `auth = "api_key"` for signing keys or `auth = "security_token"` for an authenticated OCI session.
-* `[sandbox]`: keep `runtime = "python-3.11"`, `shape = "SMALL"` and `lifetime_minutes = 60` initially. The runtime is independent of local Python 3.12. Leave the other supplied defaults unchanged.
+* `[sandbox]`: leave the supplied defaults unchanged. The sandbox's Python runtime is independent of your local environment.
 
 Expected result: settings select exactly one investigation model provider while retaining OCI sandbox configuration. Both paths rejoin at Task 4.
 
@@ -150,9 +161,9 @@ python -m fraud_detective.preflight --quick
 </copy>
 ```
 
-This checks local dependencies, configuration, OCI credentials, project settings and permissions. It makes two model calls to verify a function call and continuation with `store=True` and `previous_response_id`; it creates no sandbox. Fix each failed check using its printed hint, then rerun.
+This checks local dependencies, configuration, OCI credentials, project settings and permissions. It also calls the selected model to check that it can request a tool and continue the conversation; it creates no sandbox. Fix each failed check using its printed hint, then rerun.
 
-Expected result: quick checks pass for your chosen provider. Model conversation storage follows that provider. The application does not explicitly configure OpenAI compaction; OCI project compaction applies only to OCI model conversations.
+Expected result: quick checks pass for your chosen provider.
 
 ## Task 5: Verify sandbox execution and isolation
 
@@ -164,15 +175,15 @@ python -m fraud_detective.preflight
 </copy>
 ```
 
-It checks runtime tools, transfers and reads back a 1 MiB file, verifies an outbound request is blocked, and requests cleanup. Provisioning may take several minutes; follow the progress messages. This is an acceptance command for your environment, not a claim that cloud checks were run during workshop authoring.
+It checks runtime tools, transfers and reads back a file, verifies an outbound request is blocked, and requests cleanup. Provisioning may take several minutes; follow the progress messages.
 
-Expected result: `All checks passed`. A warning about cleanup still stopping is acceptable only if you record the sandbox ID and complete deletion later as described in Lab 3. Do not keep the test sandbox unless you need it. With `--keep` it expires after 20 minutes and still needs deletion after becoming `STOPPED`.
+Expected result: `All checks passed`. If cleanup reports that the sandbox is still stopping, record its ID and complete deletion in Lab 3.
 
 ## Task 6: Read the coding rules
 
-Read the source checkout's `AGENTS.md`. Codex must preserve provided infrastructure, existing tests, configuration and secrets; implement only the current lab modules. Settings come from `Settings.load()`, clients from the provided factories, and sandbox commands always have timeouts. Codex must not read `solutions/`.
+Read the source checkout's `AGENTS.md`. Codex must preserve provided infrastructure, existing tests, configuration and secrets, and implement only the current lab modules. Do not have Codex read `solutions/` or instructor-only case documentation.
 
-You configure your own settings in this setup lab; later coding prompts must preserve them. Bundle reads and analysis run through `SandboxSession`. Tests use synthetic fixtures with fakes and never call OCI or a model.
+You configure your own settings in this setup lab; later coding prompts must preserve them. Application tests use synthetic fixtures and fake services so you can check code without cloud calls.
 
 Expected result: you can explain `DENY_ALL`, distinguish `.env` from `.venv`, and identify which service stores your investigation conversation. Continue to [Lab 1](../workshops/index.html?lab=lab1).
 

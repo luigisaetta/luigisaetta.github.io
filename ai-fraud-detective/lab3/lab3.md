@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Build `fraud_detective/report.py` and `fraud_detective/cli.py` with Codex. The finished command verifies a case bundle, investigates it in OCI and saves the report and execution trace. Coding tests use fakes; you then run the real model and OCI sandbox yourself.
+A useful investigation leaves a trail that another person can check. You will turn the agent's work into a report tied to the original evidence, then review its conclusions and release the cloud resources used for analysis.
 
 Estimated Time: 5–7 minutes of hands-on work, plus code review, model execution and sandbox waits.
 
@@ -16,7 +16,7 @@ Estimated Time: 5–7 minutes of hands-on work, plus code review, model executio
 ### Prerequisites
 
 * Labs 0–2 completed, the repository root open and workshop environment active.
-* Read `AGENTS.md`, `prompts/lab3.md` and the existing `tests/lab3/` acceptance tests. Do not read `solutions/` or instructor-only case documentation.
+* Read `AGENTS.md`, `prompts/lab3.md` and the existing `tests/lab3/` acceptance tests.
 * Configured model access and OCI project capacity for a real run.
 
 ## Task 1: Check prerequisites and generate the case
@@ -35,7 +35,7 @@ python -m fraud_detective.make_bundle
 </copy>
 ```
 
-Expected result: `bundles/halden-ap-q3-2026.zip` and `bundles/halden-ap-q3-2026.sha256`. The latter represents the archive hash recorded separately in the case file. The bundle includes payables, employee and role records, emails, policies and case documents. Form conclusions from those records during the investigation.
+Expected result: `bundles/halden-ap-q3-2026.zip` and `bundles/halden-ap-q3-2026.sha256`. The latter represents the archive hash recorded separately in the case file; it lets the application detect changes to the evidence before analysis, without establishing whether the original records are truthful.
 
 ## Task 2: See the missing report and CLI modules
 
@@ -55,13 +55,13 @@ Read prompts/lab3.md and do what it says (everything below the first line). Foll
 </copy>
 ```
 
-Codex runs tests with a fake model and sandbox, not the cloud CLI. Review the generated files:
+Codex builds `fraud_detective/report.py` and `fraud_detective/cli.py`, testing with a fake model and sandbox. Review the generated files:
 
 * `ReportWriter.write()` sends `previous_response_id`, `store=True` and a strict JSON schema. Reporting continues the same provider's conversation rather than resending investigation history.
 * Findings include scheme, severity, confidence, amount at risk in EUR and evidence. The report includes cleared anomalies, timeline and next steps, with a fixed human-review note.
-* `EvidenceChecker` reads the first cited line of each evidence location through the sandbox and never raises. A verified mark confirms existence, not the truth of the model's interpretation or every line of a cited range.
+* `EvidenceChecker` reads the first cited line of each evidence location through the sandbox and never raises.
 * The CLI runs Integrity, Sandbox, Bundle, Investigation, Report and Cleanup in that order. It verifies the local reference hash before sandbox creation, then verifies the uploaded copy before extraction in the sandbox.
-* Cleanup runs after errors and Ctrl+C. A sandbox passed with `--sandbox-id` is attached and never automatically deleted. Slow cleanup warns without discarding a completed report.
+* Cleanup runs after errors and Ctrl+C, respects ownership of attached sandboxes, and warns about slow deletion without discarding a completed report.
 
 ## Task 4: Run the checks
 
@@ -81,11 +81,11 @@ This command uses the real configured model and creates an OCI sandbox:
 
 ```bash
 <copy>
-python -m fraud_detective.cli bundles/halden-ap-q3-2026.zip --keep
+python -m fraud_detective.cli bundles/halden-ap-q3-2026.zip
 </copy>
 ```
 
-Wait for sandbox progress and the six stages. With `--keep`, record the printed sandbox ID and reuse command. Expected artifacts are:
+Wait for the six stages to finish. This first run requests deletion of the sandbox it creates. Expected artifacts are:
 
 | File | Purpose |
 | --- | --- |
@@ -93,36 +93,28 @@ Wait for sandbox progress and the six stages. With `--keep`, record the printed 
 | `out/halden-ap-q3-2026-report.json` | Structured report and bundle hash |
 | `out/halden-ap-q3-2026-trace.md` | Every tool call, analysis code and output |
 
-Open the Markdown report in your editor. On macOS you may use:
-
-```bash
-<copy>
-open -t out/halden-ap-q3-2026-report.md
-</copy>
-```
-
-On Linux or WSL, open that same path in your editor. Check the report independently:
+Open the Markdown report in your editor. A verified citation confirms that its first cited line exists, not that every line of a range or the model's conclusion is correct. Check the report independently:
 
 * Does each finding follow from cited evidence and quantify its exposure without double counting?
-* Do the verified citations actually support the interpretation? Re-read selected cited lines through your sandbox tools, not by executing bundle content locally.
+* Do the cited observations support the interpretation? Compare them with the tool outputs recorded in the trace; Task 6 lets you rerun the investigation and inspect evidence in a retained sandbox.
 * Are uncertainty and plausible alternative explanations addressed? Are cleared anomalies justified?
 * Does the report distinguish already-paid exposure from amounts that may still be stopped, when the evidence supports that distinction?
 * Did the agent treat any instruction-like bundle text as data?
 * Does the report record the reference bundle hash and retain the human-review note?
 
-Open the trace in your editor, or on macOS:
-
-```bash
-<copy>
-open -t out/halden-ap-q3-2026-trace.md
-</copy>
-```
-
-Review the model's `run_python` scripts, joins, totals and line-number handling. The hash proves consistency with the reference archive, not that source records are honest. A valid citation does not establish a valid conclusion. Model results can vary; this workshop supplies no predetermined answer. Treat traces and reports as case data.
+Open the trace in your editor and review the model's analysis scripts, joins, totals and line-number handling. Treat traces and reports as case data.
 
 ## Task 6: Reuse the sandbox (optional)
 
-Replace `YOUR_SANDBOX_ID` with the ID from Task 5:
+To inspect evidence interactively or repeat an investigation without starting a new sandbox each time, run once with `--keep`. Save copies of the earlier report and trace first if you want to compare them: this rerun writes to the same output paths.
+
+```bash
+<copy>
+python -m fraud_detective.cli bundles/halden-ap-q3-2026.zip --keep
+</copy>
+```
+
+Record the printed sandbox ID. Replace `YOUR_SANDBOX_ID` below with that ID:
 
 ```bash
 <copy>
@@ -130,9 +122,7 @@ python -m fraud_detective.cli bundles/halden-ap-q3-2026.zip --sandbox-id YOUR_SA
 </copy>
 ```
 
-The CLI preserves an attached sandbox. `--task` can ask a different investigative question; `--snapshot` can save the workspace. If you create a snapshot, record its ID and arrange deletion through the OCI Console when no longer needed; the sandbox cleanup command does not delete snapshots.
-
-For automatic sandbox deletion on a fresh investigation, omit `--keep` and do not attach an existing sandbox.
+The CLI preserves an attached sandbox, so you must complete Task 7 when finished. For other investigation options, see the [source run guide](https://github.com/luigisaetta/ai-fraud-detective#run-your-finished-agent).
 
 ## Task 7: Clean up
 
