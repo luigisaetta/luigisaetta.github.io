@@ -33,17 +33,7 @@ Keep `OPENAI_API_KEY` in your private `.env`. For the OCI alternative, set `prov
 
 Both paths rejoin at Task 2 and use the same test and run commands. Confirm that your provider offers the Decisions API and selected model; if unavailable, you can finish the workshop after Lab 3.
 
-## Task 2: See the tests fail
-
-```bash
-<copy>
-python -m pytest tests/lab4 -q
-</copy>
-```
-
-On a fresh checkout expect `ModuleNotFoundError: fraud_detective.decisions`.
-
-## Task 3: Ask Codex to build decision support
+## Task 2: Ask Codex to build decision support
 
 ```text
 <copy>
@@ -61,7 +51,7 @@ Codex builds `fraud_detective/decisions.py` using a fake client for tests; this 
 
 The API returns indicators rather than explanatory reasoning. The saved report supplies the evidential context; investigators retain responsibility for action. Probabilities depend on the quality of that report and the wording of each question.
 
-## Task 4: Run the checks
+## Task 3: Run the checks
 
 ```bash
 <copy>
@@ -73,7 +63,7 @@ python -m pylint fraud_detective
 
 Expected result: all tests pass and formatting/lint checks report no problems.
 
-## Task 5: Run it on your report
+## Task 4: Run it on your report
 
 This sends report fields to your separately configured decision provider:
 
@@ -87,9 +77,9 @@ Expected result: one block per finding and a suggested next action; `out/halden-
 
 Check every indicator against your report. Does the report contain enough evidence for each question? Is the proposed action consistent with the reported facts and uncertainty? Treat refusals and intermediate probabilities explicitly.
 
-## Task 6: Explore question wording (optional)
+## Task 5: Explore question wording (optional)
 
-In `build_questions`, try combining "stopped or recovered" in place of the unpaid-amount question. Run Task 5 again and compare the answers with the precise claims in your own report. The revised wording mixes a payment not yet made with recovery after payment. Restore the original question and rerun the tests.
+In `build_questions`, try combining "stopped or recovered" in place of the unpaid-amount question. Run Task 4 again and compare the answers with the precise claims in your own report. The revised wording mixes a payment not yet made with recovery after payment. Restore the original question and rerun the tests.
 
 Expected result: you can explain the difference between open-ended investigation and bounded decision support, why questions need observable criteria, and who selects thresholds. No sandbox cleanup is needed for this module; ensure Lab 3 cleanup is complete and retain decision files only as needed. Use [Need Help](../workshops/index.html?lab=need-help) for recovery.
 

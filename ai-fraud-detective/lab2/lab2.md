@@ -18,7 +18,7 @@ Estimated Time: 5–7 minutes of hands-on work, plus reading and review.
 * Lab 1 completed, active workshop environment and commands run from the repository root.
 * Read `AGENTS.md`, `prompts/lab2.md` and `tests/lab2/`.
 
-## Task 1: Check Lab 1 and see the new tests fail
+## Task 1: Check Lab 1
 
 ```bash
 <copy>
@@ -26,15 +26,7 @@ python -m pytest tests/lab1 -q
 </copy>
 ```
 
-Resolve any earlier failure before proceeding. Then run:
-
-```bash
-<copy>
-python -m pytest tests/lab2 -q
-</copy>
-```
-
-On a fresh checkout, expect `ModuleNotFoundError: fraud_detective.agent`.
+Resolve any earlier failure before proceeding.
 
 ## Task 2: Ask Codex to build the agent
 

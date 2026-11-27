@@ -17,19 +17,7 @@ Estimated Time: 5–7 minutes of hands-on work, plus reading and code review.
 * Lab 0 completed; repository root open and the selected Python environment active.
 * Read `AGENTS.md`, `prompts/lab1.md` and the existing acceptance tests.
 
-## Task 1: See the missing module
-
-You will build `fraud_detective/tools.py`. Start with its acceptance tests, which use synthetic fixtures and a local fake sandbox without OCI or model calls:
-
-```bash
-<copy>
-python -m pytest tests/lab1 -q
-</copy>
-```
-
-On a fresh participant checkout this fails with `ModuleNotFoundError: fraud_detective.tools`. If the module already exists, review its current state rather than deleting your work.
-
-## Task 2: Ask Codex to build the tools
+## Task 1: Ask Codex to build the tools
 
 Open Codex in the participant repository root and enter this prompt:
 
@@ -50,7 +38,7 @@ The prompt defines `Tool`, the tool classes and `ToolRegistry`. Keep those inter
 
 Evidence uses `path:line: text`. For CSV files, line 1 is the header and line n is data row n minus 1. Large exports require aggregation through standard-library Python rather than reading every row into context.
 
-## Task 3: Review the generated implementation
+## Task 2: Review the generated implementation
 
 Open `fraud_detective/tools.py`. It should use the provided `SandboxSession` to run commands and move files; its `run()` method takes a timeout. The fake backend in `tests/unit/fakes.py` is for controlled fixtures only; real bundle analysis uses OCI. Check:
 
@@ -62,7 +50,7 @@ Open `fraud_detective/tools.py`. It should use the provided `SandboxSession` to 
 
 Expected result: each tool returns a bounded answer or an actionable error through the provided sandbox interface.
 
-## Task 4: Run the checks
+## Task 3: Run the checks
 
 Run each command and resolve failures in your lab code:
 
@@ -76,7 +64,7 @@ python -m pylint fraud_detective
 
 Expected result: all tests pass, Black reports no required changes and Pylint reports no problems. Do not edit, skip or remove existing tests to achieve this result.
 
-## Task 5: Try the tools by hand (optional)
+## Task 4: Try the tools by hand (optional)
 
 In a Python session launched from the repository root, use this synthetic fixture:
 

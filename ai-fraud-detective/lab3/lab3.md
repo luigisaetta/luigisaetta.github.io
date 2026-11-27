@@ -37,17 +37,7 @@ python -m fraud_detective.make_bundle
 
 Expected result: `bundles/halden-ap-q3-2026.zip` and `bundles/halden-ap-q3-2026.sha256`. The latter represents the archive hash recorded separately in the case file; it lets the application detect changes to the evidence before analysis, without establishing whether the original records are truthful.
 
-## Task 2: See the missing report and CLI modules
-
-```bash
-<copy>
-python -m pytest tests/lab3 -q
-</copy>
-```
-
-On a fresh checkout this fails because `fraud_detective.report` and `fraud_detective.cli` do not exist.
-
-## Task 3: Ask Codex to build the report and command line
+## Task 2: Ask Codex to build the report and command line
 
 ```text
 <copy>
@@ -63,7 +53,7 @@ Codex builds `fraud_detective/report.py` and `fraud_detective/cli.py`, testing w
 * The CLI runs Integrity, Sandbox, Bundle, Investigation, Report and Cleanup in that order. It verifies the local reference hash before sandbox creation, then verifies the uploaded copy before extraction in the sandbox.
 * Cleanup runs after errors and Ctrl+C, respects ownership of attached sandboxes, and warns about slow deletion without discarding a completed report.
 
-## Task 4: Run the checks
+## Task 3: Run the checks
 
 ```bash
 <copy>
@@ -75,7 +65,7 @@ python -m pylint fraud_detective
 
 Expected result: all tests pass and formatting/lint checks report no problems. The integrity tests cover missing reference hashes and modified archives stopping before sandbox creation; use these synthetic tests to review that failure path without altering the case evidence.
 
-## Task 5: Run and review the investigation
+## Task 4: Run and review the investigation
 
 This command uses the real configured model and creates an OCI sandbox:
 
@@ -96,7 +86,7 @@ Wait for the six stages to finish. This first run requests deletion of the sandb
 Open the Markdown report in your editor. A verified citation confirms that its first cited line exists, not that every line of a range or the model's conclusion is correct. Check the report independently:
 
 * Does each finding follow from cited evidence and quantify its exposure without double counting?
-* Do the cited observations support the interpretation? Compare them with the tool outputs recorded in the trace; Task 6 lets you rerun the investigation and inspect evidence in a retained sandbox.
+* Do the cited observations support the interpretation? Compare them with the tool outputs recorded in the trace; Task 5 lets you rerun the investigation and inspect evidence in a retained sandbox.
 * Are uncertainty and plausible alternative explanations addressed? Are cleared anomalies justified?
 * Does the report distinguish already-paid exposure from amounts that may still be stopped, when the evidence supports that distinction?
 * Did the agent treat any instruction-like bundle text as data?
@@ -104,7 +94,7 @@ Open the Markdown report in your editor. A verified citation confirms that its f
 
 Open the trace in your editor and review the model's analysis scripts, joins, totals and line-number handling. Treat traces and reports as case data.
 
-## Task 6: Reuse the sandbox (optional)
+## Task 5: Reuse the sandbox (optional)
 
 To inspect evidence interactively or repeat an investigation without starting a new sandbox each time, run once with `--keep`. Save copies of the earlier report and trace first if you want to compare them: this rerun writes to the same output paths.
 
@@ -122,9 +112,9 @@ python -m fraud_detective.cli bundles/halden-ap-q3-2026.zip --sandbox-id YOUR_SA
 </copy>
 ```
 
-The CLI preserves an attached sandbox, so you must complete Task 7 when finished. For other investigation options, see the [source run guide](https://github.com/luigisaetta/ai-fraud-detective#run-your-finished-agent).
+The CLI preserves an attached sandbox, so you must complete Task 6 when finished. For other investigation options, see the [source run guide](https://github.com/luigisaetta/ai-fraud-detective#run-your-finished-agent).
 
-## Task 7: Clean up
+## Task 6: Clean up
 
 A kept sandbox expires after `sandbox.lifetime_minutes` (60 by default), becomes `STOPPED` and still needs deletion. List the configured project's sandboxes:
 

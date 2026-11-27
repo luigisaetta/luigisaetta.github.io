@@ -76,7 +76,7 @@ python -m fraud_detective.cleanup --delete
 </copy>
 ```
 
-Confirm only resources you own. Rerun once stopping sandboxes become stopped. An attached sandbox is preserved by the CLI; an expired sandbox is stopped rather than deleted. Snapshots and dedicated projects need separate lifecycle review in the OCI Console. See Task 7 in [Lab 3](../workshops/index.html?lab=lab3).
+Confirm only resources you own. Rerun once stopping sandboxes become stopped. An attached sandbox is preserved by the CLI; an expired sandbox is stopped rather than deleted. Snapshots and dedicated projects need separate lifecycle review in the OCI Console. See Task 6 in [Lab 3](../workshops/index.html?lab=lab3).
 
 Expected result: owned sandboxes are deleted and any remaining resources have an explicit owner and cleanup action. Resume the relevant lab after resolving its acceptance checks.
 
